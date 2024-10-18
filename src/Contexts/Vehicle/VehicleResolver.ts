@@ -1,6 +1,7 @@
 import { Arg, Mutation, Query, Resolver } from "type-graphql";
 import { VehicleInput, VehicleMessage, VehicleTypes } from "./VehicleTypes";
 import { VehicleService } from "./VehicleService";
+import {ErrorResponse} from "../BaseType";
 
 @Resolver()
 export class VehicleResolver {
@@ -8,36 +9,36 @@ export class VehicleResolver {
   private readonly api = new VehicleService();
 
   @Query(() => [VehicleTypes])
-  async getAllVehicle(): Promise<VehicleTypes> {
+  async getAllVehicle(): Promise<VehicleTypes | ErrorResponse> {
     return await this.api.getVehicles();
   }
 
   @Query(() => VehicleTypes)
   async getVehicle(
-    @Arg("id") id: string
-  ): Promise<VehicleTypes> {
-    return await this.api.getVehicleById(id);
+    @Arg("vehicleId") vehicleId: string
+  ): Promise<VehicleTypes | ErrorResponse> {
+    return await this.api.getVehicleById(vehicleId);
   }
 
   @Mutation(() => VehicleTypes)
   async createNewVehicle(
     @Arg("data") data: VehicleInput
-  ): Promise<VehicleTypes> {
+  ): Promise<VehicleTypes | ErrorResponse> {
     return await this.api.saveVehicle(data);
   }
 
   @Mutation(() => VehicleTypes)
   async updateVehicle(
-    @Arg("id") id: string,
+    @Arg("vehicleId") vehicleId: string,
     @Arg("data") data: VehicleInput
-  ): Promise<VehicleTypes> {
-    return await this.api.updateVehicle(id, data);
+  ): Promise<VehicleTypes | ErrorResponse> {
+    return await this.api.updateVehicle(vehicleId, data);
   }
 
   @Mutation(() => VehicleMessage)
   async deleteVehicle(
-    @Arg("VehicleId") VehicleId: string
-  ): Promise<VehicleMessage> {
-    return await this.api.deleteVehicle(VehicleId);
+    @Arg("vehicleId") vehicleId: string
+  ): Promise<VehicleMessage | ErrorResponse> {
+    return await this.api.deleteVehicle(vehicleId);
   }
 }
